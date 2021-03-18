@@ -6,6 +6,7 @@ import (
 	"avito/internal/repository"
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"time"
 )
 
 type Application struct {
@@ -20,7 +21,7 @@ func (a *Application) Start(port string) {
 	e := echo.New()
 	e.POST("/save", a.AddNewStats)
 	e.GET("/stats", a.GetStats)
-	//e.DELETE()
+	e.DELETE("/delete", a.DeleteStats)
 	e.Logger.Fatal(e.Start(port))
 }
 
@@ -32,6 +33,9 @@ func (a *Application) GetStats(c echo.Context) error {
 	}{}
 	if err := c.Bind(req); err != nil {
 		return err
+	}
+	if req.Order == "" {
+		req.Order = "date"
 	}
 	statsSlice, err := a.repo.GetStats(req.From, req.To, req.Order)
 	if err != nil {
@@ -46,10 +50,21 @@ func (a *Application) AddNewStats(c echo.Context) error {
 	if err := c.Bind(stats); err != nil {
 		return err
 	}
+	var zeroTime time.Time
+	if stats.Date.UnixNano() == zeroTime.UnixNano() {
+		return c.String(http.StatusBadRequest, "You need to add date.")
+	}
 
 	if err := a.repo.Create(stats); err != nil {
 		return err
 	}
 
 	return c.String(http.StatusAccepted, "Stats added")
+}
+
+func (a *Application) DeleteStats(c echo.Context) error {
+	if err := a.repo.DeleteFromDB(); err != nil {
+		return err
+	}
+	return c.String(http.StatusAccepted, "Stats have been deleted.")
 }
