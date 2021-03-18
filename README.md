@@ -1,7 +1,11 @@
 # REST API
 Hi. This is my REST API server. I'm using Echo as Go web framework and GORM as ORM with PostgreSQL database.
- So, this server is made to keep the info about your ADs. Client can POST date, number of views, clicks and cost, information stores in database. Also it counts cost per click(cpc) and cost per mille (cost*1000/views, cpm).
+ So, this server is made to keep the info about your ADs. 
+ 
+ Client can POST date, number of views, clicks and cost, information stores in database. Also it counts cost per click(cpc) and cost per mille (cost*1000/views, cpm).
+ 
  Client can GET info sorted by date or other parametr and DELETE everything stored in database.
+ 
 In this README i'll tell you
 - what every package does
 - how to communicate with this server
@@ -12,13 +16,16 @@ _____
 ### models
 Here is stored struct which GORM uses to create table in database. 
 For `date` i made my own type `CutsomDate`, because default format for `Time.Time` in GO is not, what i want, so `CustomDate` looks like `YYYY-MM-DD`.
+
 For `Cost`,`Cpm` and `cpc` i used `decimal` type, because float is unreliable, when we want to work with money.
+
 `func InitModels(db *gorm.DB) error` - this func migrates DB, when we run our server.
 _____
 ### dateMarshaller
 This package is mode for new type i made. There are methods to make proper work with JSON
 - `func (c *CustomDate) UnmarshalJSON(b []byte) (err error)`
 - `func (c CustomDate) MarshalJSON() ([]byte, error)`
+- 
 Also methods for proper work with GORM
 - `func (c CustomDate) Value() (driver.Value, error)`
 - `func (c *CustomDate) Scan(v interface{}) error`
