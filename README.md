@@ -85,4 +85,5 @@ _____
 *  If you want to run it without docker, add `.env` file with your environment configuration, for example: `APP_NAME = api_server
 DB_DSN = "host=localhost user=db_user password=pwd123 dbname=stats port=54320 sslmode=disable"
 PORT = 8080` and type in terminal `go run cmd/app/main.go -dev=true`.
+
 Flag must be `true`, so server will take environment config from `.env`
