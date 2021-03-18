@@ -2,7 +2,7 @@ version: "3"
 
 services:
   postgres:
-    container_name: url_pg_db
+    container_name: stats_pg_db
     image: postgres
     environment:
       POSTGRES_DB: "stats"
