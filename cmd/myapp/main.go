@@ -1,17 +1,35 @@
 package main
 
 import (
+	"avito/config"
 	"avito/internal/app"
 	"avito/internal/models"
 	"avito/internal/repository"
+	"flag"
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
 )
 
 func main() {
-	dsn := "host=localhost user=db_user password=pwd123 dbname=stats port=54320 sslmode=disable"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	dev := flag.Bool("dev",
+		false,
+		"enable reading config from .env file instead of system env vars",
+	)
+	flag.Parse()
+
+	if *dev {
+		if err := godotenv.Load(); err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	conf, err := config.Load()
+	if err != nil {
+		log.Fatal(err)
+	}
+	db, err := gorm.Open(postgres.Open(conf.DSN), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -21,5 +39,5 @@ func main() {
 	}
 	repo := repository.NewStatsRepository(db)
 	application := app.NewApplication(repo)
-	application.Start(":8080")
+	application.Start(conf.ListenAddress())
 }
