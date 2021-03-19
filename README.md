@@ -45,7 +45,7 @@ Uses `func (a *Application) AddNewStats(c echo.Context) error`, it Unmarshall re
 ```golang
 e.GET("/stats", a.GetStats)
 ``` 
-Uses `func (a *Application) GetStats(c echo.Context) error` it Unmarshall request, and calls `GetStats` from repository, then sends to client info he needs.
+Uses `func (a *Application) GetStats(c echo.Context) error` it Unmarshall request, and calls `GetStats` from repository, then sends to client info he needs in JSON.
 ```golang
 e.DELETE("/delete", a.DeleteStats)
 ``` 
