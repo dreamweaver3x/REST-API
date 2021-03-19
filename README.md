@@ -41,7 +41,7 @@ Here is our server and all 3 handlers.
 ```golang
 e.POST("/save", a.AddNewStats)
 ``` 
-Uses `func (a *Application) AddNewStats(c echo.Context) error`, it Unmarshall request (works with JSON, should work with XML also) and sends it to DataBase.
+Uses `func (a *Application) AddNewStats(c echo.Context) error`, it Unmarshall request (works with JSON) and sends it to DataBase.
 ```golang
 e.GET("/stats", a.GetStats)
 ``` 
