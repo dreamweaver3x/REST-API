@@ -41,11 +41,11 @@ Here is our server and all 3 handlers.
 ```golang
 e.POST("/save", a.AddNewStats)
 ``` 
-Uses `func (a *Application) AddNewStats(c echo.Context) error`, it Unmarshall request (works with JSON, should work with XML also) and sends it to DataBase.
+Uses `func (a *Application) AddNewStats(c echo.Context) error`, it Unmarshall request (works with JSON) and sends it to DataBase.
 ```golang
 e.GET("/stats", a.GetStats)
 ``` 
-Uses `func (a *Application) GetStats(c echo.Context) error` it Unmarshall request, and calls `GetStats` from repository, then sends to client info he needs.
+Uses `func (a *Application) GetStats(c echo.Context) error` it Unmarshall request, and calls `GetStats` from repository, then sends to client info he needs in JSON.
 ```golang
 e.DELETE("/delete", a.DeleteStats)
 ``` 
