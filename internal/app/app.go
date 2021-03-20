@@ -63,7 +63,7 @@ func (a *Application) AddNewStats(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	return c.JSON(http.StatusAccepted, echo.Map{"result": "stats added"})
+	return c.JSON(http.StatusCreated, echo.Map{"result": "stats added"})
 }
 
 
