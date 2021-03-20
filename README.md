@@ -39,7 +39,7 @@ _____
 ### app
 Here is our server and all 3 handlers.
 ```golang
-e.POST("/save", a.AddNewStats)
+e.POST("/stats", a.AddNewStats)
 ``` 
 Uses `func (a *Application) AddNewStats(c echo.Context) error`, it Unmarshall request (works with JSON) and sends it to DataBase.
 ```golang
@@ -47,7 +47,7 @@ e.GET("/stats", a.GetStats)
 ``` 
 Uses `func (a *Application) GetStats(c echo.Context) error` it Unmarshall request, and calls `GetStats` from repository, then sends to client info he needs in JSON.
 ```golang
-e.DELETE("/delete", a.DeleteStats)
+e.DELETE("/stats", a.DeleteStats)
 ``` 
 Calls ` func (a *Application) DeleteStats(c echo.Context) error`, which deletes all information from database.
 ### main
@@ -59,7 +59,7 @@ ___
 ### POST
 if you want to send info to database, use POST method 
 example: 
-`curl -X POST http://0.0.0.0:8080/save \
+`curl -X POST http://0.0.0.0:8080/stats \
 -H 'Content-Type: application/json' \
 -d '{"date": "2100-07-19","views": 7000, "cost": 6111, "clicks": 400}'`
 
@@ -75,7 +75,7 @@ example: `curl -X GET http://0.0.0.0:8080/stats \
 You'll get reply with 200 code and info from database in JSON format (order works improperly with `cost`, `cpm` and `cpc`, i'll fix it later)
 ### DELETE
 To clear database, use method DELETE
-example: `curl -X DELETE http://0.0.0.0:8080/delete`
+example: `curl -X DELETE http://0.0.0.0:8080/stats`
 You'll get reply with 202 code and message "Stats have been deleted."
 _____
 ## How to RUN
