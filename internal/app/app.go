@@ -19,9 +19,13 @@ func NewApplication(repo *repository.StatsRepository) *Application {
 
 func (a *Application) Start(port string) {
 	e := echo.New()
-	e.POST("/save", a.AddNewStats)
-	e.GET("/stats", a.GetStats)
-	e.DELETE("/delete", a.DeleteStats)
+	stats := e.Group("stats")
+	{
+		stats.POST("", a.AddNewStats)
+		stats.GET("", a.GetStats)
+		stats.DELETE("", a.DeleteStats)
+	}
+
 	e.Logger.Fatal(e.Start(port))
 }
 
@@ -32,14 +36,14 @@ func (a *Application) GetStats(c echo.Context) error {
 		Order string                    `json:"order"`
 	}{}
 	if err := c.Bind(req); err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	if req.Order == "" {
 		req.Order = "date"
 	}
 	statsSlice, err := a.repo.GetStats(req.From, req.To, req.Order)
 	if err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	return c.JSON(http.StatusOK, statsSlice)
@@ -52,19 +56,20 @@ func (a *Application) AddNewStats(c echo.Context) error {
 	}
 	var zeroTime time.Time
 	if stats.Date.UnixNano() == zeroTime.UnixNano() {
-		return c.String(http.StatusBadRequest, "You need to add date.")
+		return echo.NewHTTPError(http.StatusBadRequest, "you need to add date")
 	}
 
 	if err := a.repo.Create(stats); err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	return c.String(http.StatusAccepted, "Stats added")
+	return c.JSON(http.StatusAccepted, echo.Map{"result": "stats added"})
 }
+
 
 func (a *Application) DeleteStats(c echo.Context) error {
 	if err := a.repo.DeleteFromDB(); err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	return c.String(http.StatusAccepted, "Stats have been deleted.")
+	return c.JSON(http.StatusAccepted, echo.Map{"result": "stats have been deleted"})
 }
